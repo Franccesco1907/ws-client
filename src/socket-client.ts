@@ -33,13 +33,12 @@ const addListeners = () => {
   })
 
   socket.on('clients-updated', (clients: string[]) => {
-    let clientsHtml = ''
+    clientsUl.replaceChildren()
     clients.forEach(clientId => {
-      clientsHtml += `
-        <li>${clientId}</li>
-      `
+      const li = document.createElement('li')
+      li.textContent = clientId
+      clientsUl.append(li)
     })
-    clientsUl.innerHTML = clientsHtml
   })
 
   messageForm.addEventListener('submit', (event) => {
@@ -55,14 +54,12 @@ const addListeners = () => {
   })
 
   socket.on('message-from-server', (payload: { fullName: string, message: string }) => {
-    const newMessage = `
-    <li>
-      <strong>${payload.fullName}</strong>
-      <span>${payload.message}</span>
-    </li>
-    `
     const li = document.createElement('li')
-    li.innerHTML = newMessage
+    const name = document.createElement('strong')
+    name.textContent = payload.fullName
+    const message = document.createElement('span')
+    message.textContent = payload.message
+    li.append(name, ' ', message)
     messageUl.append(li)
   })
 }
